@@ -132,7 +132,15 @@ class ApiController extends Controller
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
         $pdf = \PDF::loadView('report', compact('x'));
-        return $pdf->download($x->caseNo." - ".$x->caseName.".pdf"); //download terus 
+        // $pdf->save(public_path().'/pdf/'.$x->caseNo." - ".$x->caseName.".pdf");
+        // $base64Pdf = base64_encode($pdf);
+        // $tempPdf = File::get(public_path().'/pdf/'.$x->caseNo.' - '.$x->caseName.'.pdf');
+        $base64Pdf = base64_encode($pdf->stream());
+        return $base64Pdf;
+
+        // $x = Newform::where('caseNo',$request->caseNo) -> first();
+        // $pdf = \PDF::loadView('report', compact('x'));
+        // return $pdf->download($x->caseNo." - ".$x->caseName.".pdf"); //download terus 
 
         // return $pdf->stream('report.pdf'); //tengok(display) html
 
