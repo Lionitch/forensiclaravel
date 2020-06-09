@@ -8,12 +8,12 @@
 
        <table Border = 3 Width = 100% CellPadding = 3 CellSpacing = 3>
          <tr>
-             <td colspan="3" style="font-weight:bold" >Investigator Name:</td>
+             <td colspan="3"><b>Investigator Name: </b>    ( {{$x->id}} )  {{$x->name}}</td>
          </tr>
          <tr>
-             <td>Case No: {{$x->caseNo}}</td>
-             <td>Date: {{$x->date}}</td>
-             <td>Time: {{$x->time}}</td>
+             <td><b>Case No: </b>{{$x->caseNo}}</td>
+             <td><b>Date: </b>{{$x->date}}</td>
+             <td><b>Time: </b>{{$x->time}}</td>
          </tr>
          <tr>
              <td colspan="3" ><div style="font-weight:bold">Case Name: </div><div>{{$x->caseName}}</div></td>
@@ -23,10 +23,10 @@
              <div>Latitude = {{$x->latitude}}</div>
              <div>Longitude = {{$x->longitude}}</div>
              <div>Address = {{$x->address}}</div></td>
-             <td style="font-weight:bold">Scene: <div>{{$x->scene}}</div></td>
+             <td><b>Scene: </b> {{$x->scene}}</td>
          </tr>
          <tr>
-             <td style="font-weight:bold">Weather: <div>{{$x->weather}}</div></td>
+             <td><b>Weather: </b> {{$x->weather}}</td>
          </tr>
          <tr>
              <td colspan="3"><div style="font-weight:bold">Victim/s: </div><div>{{$x->victim}}</div></td>

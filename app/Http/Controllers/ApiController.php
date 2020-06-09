@@ -94,6 +94,7 @@ class ApiController extends Controller
     }
 
     public function Newform(Request $data){
+        $get = User::where("id",$data->id) -> first();
         $y = new NewForm;
         $y -> caseNo = $data -> caseNo;
         $y -> caseName = $data -> caseName;
@@ -110,6 +111,8 @@ class ApiController extends Controller
         $y -> involveB = $data -> involveB;
         $y -> involveC = $data -> involveC;
         $y -> involveD = $data -> involveD;
+        $y -> id = $get -> id;
+        $y -> name = $get -> name;
         $y -> save();
         return response()->json("Success");
     }
@@ -132,11 +135,17 @@ class ApiController extends Controller
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
         $pdf = \PDF::loadView('report', compact('x'));
-        // $pdf->save(public_path().'/pdf/'.$x->caseNo." - ".$x->caseName.".pdf");
-        // $base64Pdf = base64_encode($pdf);
-        // $tempPdf = File::get(public_path().'/pdf/'.$x->caseNo.' - '.$x->caseName.'.pdf');
+        $pdf->save(public_path().'/pdf/'.$x->caseNo." - ".$x->caseName.".pdf");
         $base64Pdf = base64_encode($pdf->stream());
+
+        // // $pdf->save(public_path("/pdf"), '-'.$x->caseNo." - ".$x->caseName.".pdf");
+        // $pdf->save(public_path(),"/pdf/".$x->caseNo." - ".$x->caseName.".pdf");
+        // // $base64Pdf = base64_encode($pdf);
+        // // $tempPdf = File::get(public_path('/pdf'),'-'.$x->caseNo.' - '.$x->caseName.'.pdf');
+        // $tempPdf = File::get(public_path(),'/pdf/'.$x->caseNo.' - '.$x->caseName.'.pdf');
+        // $base64Pdf = base64_encode($tempPdf);
         return $base64Pdf;
+
 
         // $x = Newform::where('caseNo',$request->caseNo) -> first();
         // $pdf = \PDF::loadView('report', compact('x'));
