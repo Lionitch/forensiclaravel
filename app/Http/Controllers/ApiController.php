@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Newform;
 use App\evidence;
+use App\report;
 use Illuminate\Support\Facades\File;
 
 class ApiController extends Controller
@@ -135,16 +136,11 @@ class ApiController extends Controller
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
         $pdf = \PDF::loadView('report', compact('x'));
-        $pdf->save(public_path().'/pdf/'.$x->caseNo." - ".$x->caseName.".pdf");
+        $pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
         $base64Pdf = base64_encode($pdf->stream());
-
-        // // $pdf->save(public_path("/pdf"), '-'.$x->caseNo." - ".$x->caseName.".pdf");
-        // $pdf->save(public_path(),"/pdf/".$x->caseNo." - ".$x->caseName.".pdf");
-        // // $base64Pdf = base64_encode($pdf);
-        // // $tempPdf = File::get(public_path('/pdf'),'-'.$x->caseNo.' - '.$x->caseName.'.pdf');
-        // $tempPdf = File::get(public_path(),'/pdf/'.$x->caseNo.' - '.$x->caseName.'.pdf');
-        // $base64Pdf = base64_encode($tempPdf);
         return $base64Pdf;
+
+        //Maybe kat newForm table letak pdf + status
 
 
         // $x = Newform::where('caseNo',$request->caseNo) -> first();
@@ -161,6 +157,19 @@ class ApiController extends Controller
         // $pdf->loadHTML('<h1>Test</h1>');
         // return $pdf->stream();
     }
+
+    // public function Report(Request $request){
+    //     $get = Newform::where('caseNo',$request->caseNo) -> first();
+    //     $y = new report;
+    //     $y -> caseNo = $get -> caseNo;
+    //     $y -> id = $get -> id;
+    //     $y -> name = $get -> name;
+    //     $y -> pdf = $request -> store(public_path().'/tempReport/'.$get->caseNo." - ".$get->caseName.".pdf");
+    //     $y -> status = "Unverified";
+    //     $y -> save();
+    //     return response()->json("Success");
+
+    // }
 
 
 }

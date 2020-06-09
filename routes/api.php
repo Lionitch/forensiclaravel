@@ -35,3 +35,5 @@ Route::post('/newform', 'ApiController@Newform' );
 Route::post('/evidence', 'ApiController@evidence' );
 
 Route::post('/pdf', 'ApiController@Pdf' );
+
+//Route::post('/report', 'ApiController@Report' );
