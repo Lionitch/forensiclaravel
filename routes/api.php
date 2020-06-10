@@ -36,4 +36,4 @@ Route::post('/evidence', 'ApiController@evidence' );
 
 Route::post('/pdf', 'ApiController@Pdf' );
 
-//Route::post('/report', 'ApiController@Report' );
+Route::post('/report', 'ApiController@Report' );
