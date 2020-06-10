@@ -8,7 +8,7 @@
 
        <table Border = 3 Width = 100% CellPadding = 3 CellSpacing = 3>
          <tr>
-             <td colspan="3"><b>Investigator Name: </b>   </td>
+             <td colspan="3"><b>Investigator Name: </b>  ( {{$x->invID}} )  {{$x->name}} </td>
          </tr>
          <tr>
              <td><b>Case No: </b>{{$x->caseNo}}</td>

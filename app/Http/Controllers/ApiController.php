@@ -112,7 +112,7 @@ class ApiController extends Controller
         $y -> involveB = $data -> involveB;
         $y -> involveC = $data -> involveC;
         $y -> involveD = $data -> involveD;
-        $y -> id = $get -> id;
+        $y -> invID = $get -> id;
         $y -> name = $get -> name;
         $y -> pdf= $data -> pdf;
         $y -> save();
@@ -137,14 +137,13 @@ class ApiController extends Controller
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
         
-        // $pdf = \PDF::loadView('report', compact('x'));
-        // $pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
-        // $x -> pdf = '/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf"; //save file path to DB
-        $x -> file_path = '/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf";
+        $pdf = \PDF::loadView('report', compact('x'));
+        $pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
+        $x -> pdf = '/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf"; //save file path to DB
         $x -> save();
-        // $base64Pdf = base64_encode($pdf->stream());
-        // return $base64Pdf;
-        return $x;
+        $base64Pdf = base64_encode($pdf->stream());
+        return $base64Pdf;
+       
         
 
         // if ($request->hasFile('file')){
