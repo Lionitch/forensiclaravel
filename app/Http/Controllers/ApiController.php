@@ -97,6 +97,7 @@ class ApiController extends Controller
     public function Newform(Request $data){
         $get = User::where("id",$data->id) -> first();
         $y = new NewForm;
+        $y -> id = $data -> caseNo;
         $y -> caseNo = $data -> caseNo;
         $y -> caseName = $data -> caseName;
         $y -> caseDetail = $data -> caseDetail;
@@ -115,6 +116,7 @@ class ApiController extends Controller
         $y -> invID = $get -> id;
         $y -> name = $get -> name;
         $y -> pdf= $data -> pdf;
+        $y -> status="Unverified";
         $y -> save();
         return response()->json("Success");
     }
@@ -136,30 +138,12 @@ class ApiController extends Controller
     // https://github.com/barryvdh/laravel-dompdf/issues/15
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
-        
         $pdf = \PDF::loadView('report', compact('x'));
         $pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
         $x -> pdf = '/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf"; //save file path to DB
         $x -> save();
         $base64Pdf = base64_encode($pdf->stream());
         return $base64Pdf;
-       
-        
-
-        // if ($request->hasFile('file')){
-        //     $filename = $request->file->getClientOriginalName();
-        //     $request->file->storeAs('public/tempReport',$filename);
-        //     $file = new report;
-        //     //$file->name = $filename;
-        //     $file->save();
-        //     return 'yes';
-        // }
-
-        //Maybe kat newForm table letak pdf + status
-        
-        // $x -> pdf=$pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
-        // $x -> save();
-        // return response() -> json("Success");
 
         // $x = Newform::where('caseNo',$request->caseNo) -> first();
         // $pdf = \PDF::loadView('report', compact('x'));
@@ -176,53 +160,45 @@ class ApiController extends Controller
         // return $pdf->stream();
     }
 
-    public function Report(Request $request){
-        // $get = Newform::where('caseNo',$request->caseNo) -> first();
-        // $pdf = \PDF::loadView('report', compact('x'));
-        // $pdf->save(public_path().'/tempReport/'.$get->caseNo." - ".$get->caseName.".pdf");
-        // $y = new report;
-        // $y -> caseNo = $get -> caseNo;
-        // $y -> id = $get -> id;
-        // $y -> name = $get -> name;
-        // $y -> pdf = $pdf -> pdf;
-        // $y -> status = "Unverified";
-        // $y -> save();
-        // return response()->json("Success");
-        // if($pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf")){
-        //     $y -> pdf = $pdf -> store(public_path().'/tempReport/'.$get->caseNo." - ".$get->caseName.".pdf");
-        //     $y -> save();
-        // }
-
-        // $extension = pathinfo(storage_path('/uploads/my_image.jpg'), PATHINFO_EXTENSION);
-        // dd($extension);
-
-        $y = Newform::where('caseNo',$request->caseNo) -> first();
-        if(file_exists(public_path().'/tempReport/'.$y->caseNo." - ".$y->caseName.".pdf")){
-            if(storage::hasFile('file')){
-                //$y -> pdf = $file->move(public_path("/tempReport"),$y->caseNo." - ".$y->caseName.".pdf");
-                $y -> pdf = "tact";
-                $y -> save();
-                return 'yes';
-            }
-            // if($y->caseNo==$request->caseNo){
-            //     $y -> pdf = "cat";
-            //     $y -> save();
-            //     return 'yes';
-            // }
-        }
-        
-
-        // $z = Newform::where('caseNo',$request->caseNo) -> first();
-        // //$z -> pdf->save(public_path()."/tempReport/"."A1-Me.pdf");
-        // //$z -> pdf = file_get_contents(public_path()."/tempReport/"."A1-Me.pdf");
-        // // $filename = $request->file->getClientOriginalName();
-        // // $z -> pdf->storeAs('public/tempReport',$filename);
-        // $z -> pdf = "try";
-        // $z -> save();
-        // return response() -> json("Success");
-        
-
+    public function VerifyingPdf(){
+        $very = Newform::where("status","Unverified") -> get();
+        return response() -> json($very);
     }
+
+    public function ApprovePdf(Request $prove){
+        //$z = Newform::where("caseNo",$prove->caseNo) -> first();
+        $z = Newform::where("id",$prove->caseNo) -> first();
+        $z -> status="Verified";
+        // $z -> involveA="nina";
+        $z -> save();
+        return response() -> json("Success");
+        //return response() -> json($z);
+    }
+
+    public function DenyPdf(Request $deny){
+        $a = Newform::where("id",$deny->caseNo) -> first();
+        $a -> delete();
+        return response() -> json("Success");
+    }
+    
+    public function seePdf(Request $request){
+        $x = Newform::where('id',$request->caseNo) -> first();
+        //$path = public_path($x->pdf);
+        //$path->file(public_path().'/tempReport/A1122 - Good game.pdf');
+        //return response() -> json("Success");
+        return view('seepdf', compact('x'));
+
+        // $base64Pdf = base64_encode($path->stream());
+        // return $base64Pdf;
+        //return response()->file($path);
+        // return response()->make(file_get_contents($path));
+        //return response()-> view($path);
+        //return response()->json($path);
+        //return 'jadi';
+        //dd($x);
+    }
+
+    //public function Report(Request $request){}
 
 
 }

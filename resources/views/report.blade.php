@@ -43,7 +43,11 @@
              <td colspan="3"><div style="font-weight:bold">Case Details: </div><div>{{$x->caseDetail}}</div></td>
          </tr>
          <tr>
-             <td colspan="3"><div style="font-weight:bold">Evidence: </div></td>
+             <td colspan="3"><div style="font-weight:bold">Evidence: </div>
+             <!-- https://github.com/barryvdh/laravel-dompdf/issues/303 -->
+             <!-- <img src="/evidence/test0.jpg" width="100%" height="100%"/> -->
+             <img src="{{ url('/evidence/test0.jpg') }}">
+             </td>
          </tr>
        </table>
     </body>

@@ -36,4 +36,12 @@ Route::post('/evidence', 'ApiController@evidence' );
 
 Route::post('/pdf', 'ApiController@Pdf' );
 
-Route::post('/report', 'ApiController@Report' );
+Route::get('/verifyingPdf', 'ApiController@VerifyingPdf' );
+
+Route::post('/approvePdf', 'ApiController@ApprovePdf' );
+
+Route::post('/denyPdf', 'ApiController@DenyPdf' );
+
+Route::post('/seePdf', 'ApiController@seePdf' );
+
+//Route::post('/report', 'ApiController@Report' );
