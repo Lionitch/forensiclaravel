@@ -22,6 +22,8 @@ Route::post('/login', 'ApiController@Login' );
 
 Route::post('/signup', 'ApiController@SignUp' );
 
+Route::post('/forget', 'ApiController@forget' );
+
 Route::get('/test', 'ApiController@Test' );
 
 Route::get('/verifying', 'ApiController@Verifying' );
@@ -43,5 +45,11 @@ Route::post('/approvePdf', 'ApiController@ApprovePdf' );
 Route::post('/denyPdf', 'ApiController@DenyPdf' );
 
 Route::post('/seePdf', 'ApiController@seePdf' );
+
+Route::get('/verifiedPdf', 'ApiController@VerifiedPdf' );
+
+Route::get('/madePdf/', 'ApiController@madePdf' );
+
+Route::post('/search', 'ApiController@search' );
 
 //Route::post('/report', 'ApiController@Report' );

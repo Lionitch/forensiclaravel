@@ -71,6 +71,18 @@ class ApiController extends Controller
 
     }
 
+    public function forget(Request $data){
+        $check = User::where("id",$data->id) 
+        -> where("email",$data->email)
+        -> first();
+        if($check){
+            return response()->json("Same");
+        }
+        else{
+            return response()->json("Not");
+        }
+    }
+
     public function Verifying(){
         $very = User::where("status","Unverified") -> get();
         return response() -> json($very);
@@ -122,12 +134,15 @@ class ApiController extends Controller
     }
 
     public function evidence(Request $request){
+        $x = Newform::where('caseNo',$request->caseNo) -> first();
         $testExt = [];
         $num = 0;
 
         foreach($request->file('image') as $image){
             $ext = array_push($testExt,$image->getClientOriginalExtension());
-            $image->move(public_path("/evidence"),'test'.$num.".".$image->getClientOriginalExtension());
+            //$image->move(public_path("/evidence"),"poi".$num.".".$image->getClientOriginalExtension());
+            $image->move(public_path("/evidence"),$x->caseNo.$num.".".$image->getClientOriginalExtension());
+            //$image->save(public_path().'/evidence/'.$x->caseNo.$num.".".$image->getClientOriginalExtension());
             $num += 1;
         }
         //return response()->json($testExt);
@@ -196,6 +211,33 @@ class ApiController extends Controller
         //return response()->json($path);
         //return 'jadi';
         //dd($x);
+    }
+
+    public function VerifiedPdf(){
+        $very = Newform::where("status","Verified") -> get();
+        return response() -> json($very);
+    }
+
+    public function madePdf(Request $request){
+        //$y = "PD3625";
+        //$id= $request->id ;
+        $very = Newform::where("invID",$request->id) 
+        -> where("status","Verified")
+        -> get();
+        return response() -> json($very);
+    }
+
+    public function search(Request $data){
+        //$very = Newform::where("status","Verified") -> get();
+        $get = Newform::where("id",$data->caseNo) -> get();
+        if ($get){
+            $very = Newform::where("status","Verified") -> get();
+            return response() -> json($very);
+        }
+        else {
+            return response() -> json("Not Success");
+        }
+        return response() -> json("Not Success");
     }
 
     //public function Report(Request $request){}

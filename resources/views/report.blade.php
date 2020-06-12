@@ -45,8 +45,8 @@
          <tr>
              <td colspan="3"><div style="font-weight:bold">Evidence: </div>
              <!-- https://github.com/barryvdh/laravel-dompdf/issues/303 -->
-             <!-- <img src="/evidence/test0.jpg" width="100%" height="100%"/> -->
-             <img src="{{ url('/evidence/test0.jpg') }}">
+             <img src="/evidence/test0.jpg" width="100%" height="100%"/>
+             <!-- <img src="{{ url('/evidence/test0.jpg') }}" width='100%' height='100%'> -->
              </td>
          </tr>
        </table>
