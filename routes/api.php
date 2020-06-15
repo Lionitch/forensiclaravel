@@ -13,6 +13,19 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+// Route::group([
+//     'prefix' => 'auth'
+// ], function () {
+//     Route::post('/login', 'AuthController@Login');
+//     Route::post('/signup', 'AuthController@Signup');
+  
+//     Route::group([
+//       'middleware' => 'auth:api'
+//     ], function() {
+//         Route::get('/logout', 'AuthController@logout');
+//         Route::get('/user', 'AuthController@user');
+//     });
+// });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
@@ -34,7 +47,9 @@ Route::post('/deny', 'ApiController@Deny' );
 
 Route::post('/newform', 'ApiController@Newform' );
 
-Route::post('/evidence', 'ApiController@evidence' );
+Route::post('/evidence/{caseNo}', 'ApiController@evidence' );
+
+Route::get('/getFile/{caseNo}', 'ApiController@getFile' );
 
 Route::post('/pdf', 'ApiController@Pdf' );
 
@@ -48,7 +63,7 @@ Route::post('/seePdf', 'ApiController@seePdf' );
 
 Route::get('/verifiedPdf', 'ApiController@VerifiedPdf' );
 
-Route::get('/madePdf/', 'ApiController@madePdf' );
+Route::post('/madePdf', 'ApiController@madePdf' );
 
 Route::post('/search', 'ApiController@search' );
 

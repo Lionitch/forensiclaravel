@@ -32,6 +32,16 @@ class ApiController extends Controller
         -> first();
         if($ver){
             return response()->json("Verifier");
+            //$user = $request->user();
+            // $tokenResult = $user->createToken('Personal Access Token');
+            // $token = $tokenResult->token;
+            // $token->save();
+            // return response()->json([
+            //     "Verifier",
+            //     'access_token' => $tokenResult->accessToken,
+            //     'token_type' => 'Bearer',
+            //     'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            //     ]);
         }
 
         // $loginDetails = $data -> only('id','password');
@@ -59,7 +69,7 @@ class ApiController extends Controller
         if(!empty($check)){ // Not empty mean database already exist this username
             return response()->json("Exist");
         }
-
+        //$y -> password = bcrypt($data -> password);
         $y = new User;
         $y -> id = $data -> id;
         $y -> name = $data -> name;
@@ -133,27 +143,48 @@ class ApiController extends Controller
         return response()->json("Success");
     }
 
-    public function evidence(Request $request){
+    public function evidence(Request $request, $caseNo){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
         $testExt = [];
         $num = 0;
 
         foreach($request->file('image') as $image){
             $ext = array_push($testExt,$image->getClientOriginalExtension());
-            //$image->move(public_path("/evidence"),"poi".$num.".".$image->getClientOriginalExtension());
-            $image->move(public_path("/evidence"),$x->caseNo.$num.".".$image->getClientOriginalExtension());
-            //$image->save(public_path().'/evidence/'.$x->caseNo.$num.".".$image->getClientOriginalExtension());
+            $filename = "Image -".$num.".".$image->getClientOriginalExtension();
+            //$image->move(public_path("/evidence"),"pi".$num.".".$image->getClientOriginalExtension());
+            $image->move(public_path("/evidence/".$caseNo),$filename);
             $num += 1;
         }
         //return response()->json($testExt);
-        return response()->json($num);
+        return response()->json($request);
+    }
+
+    public function getFile($caseNo){
+        $x = Newform::where('caseNo',$caseNo) -> first();
+        //dd($x);
+        $contents = file::files(public_path().'/evidence/'.$x->caseNo);
+        $total = 0;
+        foreach($contents as $y){
+            $total += 1;
+        }
+        $z = $x->caseNo;
+        return view('report', compact('x','total','z'));
+        
+        
     }
     //satu data <satu row <satu set of data> = (first), many (get)
 
     // https://github.com/barryvdh/laravel-dompdf/issues/15
     public function Pdf(Request $request){
         $x = Newform::where('caseNo',$request->caseNo) -> first();
-        $pdf = \PDF::loadView('report', compact('x'));
+        $contents = file::files(public_path().'/evidence/'.$x->caseNo);
+        $total = 0;
+        foreach($contents as $y){
+            $total += 1;
+        }
+        $z = $x->caseNo;
+        $pdf = \PDF::loadView('report', compact('x','total','z'));
+        //$x=file::findOrFail($request->caseNo);
         $pdf->save(public_path().'/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf");
         $x -> pdf = '/tempReport/'.$x->caseNo." - ".$x->caseName.".pdf"; //save file path to DB
         $x -> save();
@@ -227,18 +258,20 @@ class ApiController extends Controller
         return response() -> json($very);
     }
 
-    public function search(Request $data){
-        //$very = Newform::where("status","Verified") -> get();
-        $get = Newform::where("id",$data->caseNo) -> get();
-        if ($get){
-            $very = Newform::where("status","Verified") -> get();
-            return response() -> json($very);
-        }
-        else {
-            return response() -> json("Not Success");
-        }
-        return response() -> json("Not Success");
-    }
+    // public function search(Request $data){
+    //     //$very = Newform::where("status","Verified") -> get();
+    //     $get = Newform::where("invID",$data->id)
+    //     ->where("status","Verified") -> get();
+    //     return response() -> json($get);
+    //     // if ($get){
+    //     //     $very = Newform::where("status","Verified") -> get();
+    //     //     return response() -> json($very);
+    //     // }
+    //     // else {
+    //     //     return response() -> json("Not Success");
+    //     // }
+    //     // return response() -> json("Not Success");
+    // }
 
     //public function Report(Request $request){}
 

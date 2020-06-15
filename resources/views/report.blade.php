@@ -44,9 +44,11 @@
          </tr>
          <tr>
              <td colspan="3"><div style="font-weight:bold">Evidence: </div>
-             <!-- https://github.com/barryvdh/laravel-dompdf/issues/303 -->
-             <img src="/evidence/test0.jpg" width="100%" height="100%"/>
-             <!-- <img src="{{ url('/evidence/test0.jpg') }}" width='100%' height='100%'> -->
+            @for($i=0; $i < $total; $i++)
+                <img src="{{public_path('evidence/'.$z.'/Image -'.$i.'.jpg')}}" alt="image" width='200px' height='275px'/>
+                
+            @endfor
+             
              </td>
          </tr>
        </table>
