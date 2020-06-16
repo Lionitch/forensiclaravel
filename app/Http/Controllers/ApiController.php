@@ -8,6 +8,7 @@ use App\Newform;
 use App\evidence;
 use App\report;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
 {
@@ -18,20 +19,25 @@ class ApiController extends Controller
         // if ($data->id=="Verifier"){
         //     return response()->json("Verifier");
         // }
-
+        
         $inv = User::where("id",$data->id) 
-        -> where("password",$data->password)
         -> where("status","Verified")
         -> first();
         if($inv){
-            return response()->json("Investigator");
+            if (Hash::check($data->password, $inv->password)) {
+                return response()->json("Investigator");
+            }
+            return response()->json("Password is wrong");
         }
+
         $ver = User::where("id",$data->id) 
-        -> where("password",$data->password)
         -> where("status","Verifier")
         -> first();
         if($ver){
-            return response()->json("Verifier");
+            if (Hash::check($data->password, $ver->password)) {
+                return response()->json("Verifier");
+            }
+            return response()->json("Password is wrong");
             //$user = $request->user();
             // $tokenResult = $user->createToken('Personal Access Token');
             // $token = $tokenResult->token;
@@ -73,8 +79,9 @@ class ApiController extends Controller
         $y = new User;
         $y -> id = $data -> id;
         $y -> name = $data -> name;
-        $y -> password = $data -> password;
-        //$y -> password = bcrypt($data -> password);
+        // $y -> password = $data -> password;
+        $hash = Hash::make($data->password);
+        $y -> password = $hash;
         $y -> email = $data -> email;
         $y -> status = "Unverified";
         $y -> save();
