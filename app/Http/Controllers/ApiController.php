@@ -69,11 +69,12 @@ class ApiController extends Controller
         if(!empty($check)){ // Not empty mean database already exist this username
             return response()->json("Exist");
         }
-        //$y -> password = bcrypt($data -> password);
+        
         $y = new User;
         $y -> id = $data -> id;
         $y -> name = $data -> name;
         $y -> password = $data -> password;
+        //$y -> password = bcrypt($data -> password);
         $y -> email = $data -> email;
         $y -> status = "Unverified";
         $y -> save();
@@ -159,19 +160,7 @@ class ApiController extends Controller
         return response()->json($request);
     }
 
-    public function getFile($caseNo){
-        $x = Newform::where('caseNo',$caseNo) -> first();
-        //dd($x);
-        $contents = file::files(public_path().'/evidence/'.$x->caseNo);
-        $total = 0;
-        foreach($contents as $y){
-            $total += 1;
-        }
-        $z = $x->caseNo;
-        return view('report', compact('x','total','z'));
-        
-        
-    }
+
     //satu data <satu row <satu set of data> = (first), many (get)
 
     // https://github.com/barryvdh/laravel-dompdf/issues/15
@@ -212,36 +201,16 @@ class ApiController extends Controller
     }
 
     public function ApprovePdf(Request $prove){
-        //$z = Newform::where("caseNo",$prove->caseNo) -> first();
         $z = Newform::where("id",$prove->caseNo) -> first();
         $z -> status="Verified";
-        // $z -> involveA="nina";
         $z -> save();
         return response() -> json("Success");
-        //return response() -> json($z);
     }
 
     public function DenyPdf(Request $deny){
         $a = Newform::where("id",$deny->caseNo) -> first();
         $a -> delete();
         return response() -> json("Success");
-    }
-    
-    public function seePdf(Request $request){
-        $x = Newform::where('id',$request->caseNo) -> first();
-        //$path = public_path($x->pdf);
-        //$path->file(public_path().'/tempReport/A1122 - Good game.pdf');
-        //return response() -> json("Success");
-        return view('seepdf', compact('x'));
-
-        // $base64Pdf = base64_encode($path->stream());
-        // return $base64Pdf;
-        //return response()->file($path);
-        // return response()->make(file_get_contents($path));
-        //return response()-> view($path);
-        //return response()->json($path);
-        //return 'jadi';
-        //dd($x);
     }
 
     public function VerifiedPdf(){
@@ -250,30 +219,37 @@ class ApiController extends Controller
     }
 
     public function madePdf(Request $request){
-        //$y = "PD3625";
-        //$id= $request->id ;
         $very = Newform::where("invID",$request->id) 
         -> where("status","Verified")
         -> get();
         return response() -> json($very);
     }
 
-    // public function search(Request $data){
-    //     //$very = Newform::where("status","Verified") -> get();
-    //     $get = Newform::where("invID",$data->id)
-    //     ->where("status","Verified") -> get();
-    //     return response() -> json($get);
-    //     // if ($get){
-    //     //     $very = Newform::where("status","Verified") -> get();
-    //     //     return response() -> json($very);
-    //     // }
-    //     // else {
-    //     //     return response() -> json("Not Success");
-    //     // }
-    //     // return response() -> json("Not Success");
-    // }
+    public function search(Request $request){
+        if($request->caseNo){
+            $get = Newform::where("id",$request->caseNo)
+            -> where("status","Verified") -> get();
+            return response() -> json($get);
+        }
+        else {
+            $very = Newform::where("status","Verified") -> get();
+            return response() -> json($very);
+        }
+    }
 
-    //public function Report(Request $request){}
-
-
+    public function Report(Request $request){
+        if($request->caseNo){
+            $get = Newform::where("id",$request->caseNo)
+            -> where("invID",$request->id)
+            -> where("status","Verified") 
+            -> get();
+            return response() -> json($get);
+        }
+        else {
+            $very = Newform::where("invID",$request->id) 
+            -> where("status","Verified")
+            -> get();
+            return response() -> json($very);
+        }
+    }
 }

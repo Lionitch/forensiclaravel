@@ -49,8 +49,6 @@ Route::post('/newform', 'ApiController@Newform' );
 
 Route::post('/evidence/{caseNo}', 'ApiController@evidence' );
 
-Route::get('/getFile/{caseNo}', 'ApiController@getFile' );
-
 Route::post('/pdf', 'ApiController@Pdf' );
 
 Route::get('/verifyingPdf', 'ApiController@VerifyingPdf' );
@@ -59,12 +57,10 @@ Route::post('/approvePdf', 'ApiController@ApprovePdf' );
 
 Route::post('/denyPdf', 'ApiController@DenyPdf' );
 
-Route::post('/seePdf', 'ApiController@seePdf' );
-
 Route::get('/verifiedPdf', 'ApiController@VerifiedPdf' );
 
 Route::post('/madePdf', 'ApiController@madePdf' );
 
 Route::post('/search', 'ApiController@search' );
 
-//Route::post('/report', 'ApiController@Report' );
+Route::post('/report', 'ApiController@Report' );

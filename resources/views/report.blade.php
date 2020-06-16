@@ -45,7 +45,7 @@
          <tr>
              <td colspan="3"><div style="font-weight:bold">Evidence: </div>
             @for($i=0; $i < $total; $i++)
-                <img src="{{public_path('evidence/'.$z.'/Image -'.$i.'.jpg')}}" alt="image" width='200px' height='275px'/>
+                <img style="vertical-align: bottom;" src="{{public_path('evidence/'.$z.'/Image -'.$i.'.jpg')}}" alt="image" width='200px' height='275px'/>
                 
             @endfor
              
